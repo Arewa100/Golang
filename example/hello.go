@@ -12,8 +12,8 @@ func main() {
 	fmt.Printf("the sum of the values is %d\n", add(firstNumber, secondNumber))
 
 	var name, age, height = "miracle", 23, 2.4 
-
-	fmt.Printf("name: %s\nage: %d\nheight: %g\n", name, age, height)
+	
+	fmt.Printf("name: %s\n age: %d\nheight: %g\n", name, age, height)
 	 
 }
 
