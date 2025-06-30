@@ -15,11 +15,11 @@ func main() {
 		//s += os.Args[index];
 		//fmt.Println(s);
 	//}
-
-	for index := 1;
-	index <= 3;
-	index++ {
-		fmt.Println("working");
+	
+	count := 1;
+	for count <= 10 {
+		fmt.Println("a while loop");
+		count++;
 	}
 }
 
