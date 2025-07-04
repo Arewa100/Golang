@@ -12,5 +12,12 @@ func main() {
 
 	name = string(bytename)
 	fmt.Println(name)
-	fmt.Print(&name)
+	fmt.Printlns(&name)
+
+
+
+	password := "secret124"
+	//password[0] = "r" //thiss will generate error beecause you can't modify a string
+	fmt.Println(password)
+	
 }
