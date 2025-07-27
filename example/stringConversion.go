@@ -7,7 +7,7 @@ import("fmt"
 
 func main() {
 	print("welcome to the integer to string converter")
-	age := "11100"
+	age := "77"
 	//y := fmt.Sprintf("%d", age)
 	//fmt.Println(strconv.FormatInt(int64(age), 2))
 
@@ -22,4 +22,4 @@ func main() {
 
 func print(text string) {
 	fmt.Println(text)
-}
+}to

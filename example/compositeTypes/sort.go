@@ -28,7 +28,6 @@ func sortNumbers(arrayOfNumbers [5]int) {
 				arrayOfNumbers[index] = arrayOfNumbers[secondIndex]
 				arrayOfNumbers[secondIndex] = previousElement
 				currentElement = arrayOfNumbers[index]
-				fmt.Println(currentElement)
 			}
 		}
 	}
