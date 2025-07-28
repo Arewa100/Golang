@@ -16,4 +16,6 @@ func main() {
 	listOfNames["Ay"] = 20
 	listOfNames["Shola"] = 21
 	fmt.Println(listOfNames)
+
+	fmt.Println(len(listOfNames))
 }
