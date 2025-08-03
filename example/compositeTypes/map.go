@@ -15,7 +15,21 @@ func main() {
 	listOfNames := make(map[string]int)
 	listOfNames["Ay"] = 20
 	listOfNames["Shola"] = 21
-	fmt.Println(listOfNames)
 
-	fmt.Println(len(listOfNames))
+	listOfNames["Shola"] += 1
+
+	for key, value := range listOfNames {
+		fmt.Printf("%s: %d\n", key, value)
+	}
+
+	//fmt.Println(listOfNames)
+
+	//fmt.Println(len(listOfNames))
+
+
+	var ages map[string]int
+	
+	ages["ope"] = 40
+
+	fmt.Println(ages)
 }
