@@ -1,7 +1,6 @@
 package account
 
 import (
-	"errors"
 	"testing"
 )
 
@@ -52,8 +51,40 @@ func validateAccountCreation(account *Account, t *testing.T) {
 func TestThatToDepositA_NegativeAmount_Error_IsThrown(t *testing.T) {
 	newAccount := createAccount()
 	err := newAccount.Deposit("123456", -1)
-	expectedErr := errors.New("account number is not valid")
-	if errors.Is(expectedErr, err) {
+	if err == nil {
 		t.Error(err)
+	}
+}
+
+func TestToDeposit1000_Withdraw_500_BalanceIs500(t *testing.T) {
+	newAccount := createAccount()
+	err := newAccount.Deposit("123456", 1000)
+	if err != nil {
+		t.Error(err)
+	}
+	if newAccount.CheckAccountBalance("123456", "password") != 1000 {
+		t.Error("account balance not equal to 1000")
+	}
+	withdrawError := newAccount.Withdraw("123456", 500, "password")
+	if withdrawError != nil {
+		t.Error(withdrawError)
+	}
+	if newAccount.CheckAccountBalance("123456", "password") != 500 {
+		t.Error("withdraw not working")
+	}
+}
+
+func TestToWithDrawAnAmountThatIsHigherThanAccountBalance(t *testing.T) {
+	newAccount := createAccount()
+	err := newAccount.Deposit("123456", 1000)
+	if err != nil {
+		t.Error(err)
+	}
+	if newAccount.CheckAccountBalance("123456", "password") != 1000 {
+		t.Error("account balance not equal to 1000")
+	}
+	withdrawError := newAccount.Withdraw("123456", 1500, "password")
+	if withdrawError != nil && withdrawError.Error() == "insufficient balance" {
+		t.Log(withdrawError)
 	}
 }

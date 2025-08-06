@@ -29,7 +29,10 @@ func (account *Account) CheckAccountBalance(accountNumber string, password strin
 }
 
 func (account *Account) Deposit(accountNumber string, amount float32) error {
-	if validateAmount(amount) && accountNumber == account.accountNumber {
+	if !validateAmount(amount) {
+		return errors.New("invalid amount")
+	}
+	if accountNumber == account.accountNumber {
 		account.balance += amount
 		return nil
 	} else {
@@ -42,5 +45,21 @@ func validateAmount(amount float32) bool {
 		return true
 	} else {
 		return false
+	}
+}
+
+func (account *Account) Withdraw(accountNumber string, amount float32, password string) error {
+	if !validateAmount(amount) {
+		return errors.New("invalid withdraw amount")
+	}
+	if accountNumber == account.accountNumber && password == account.password {
+		if account.balance > amount {
+			account.balance -= amount
+			return nil
+		} else {
+			return errors.New("insufficient balance")
+		}
+	} else {
+		return errors.New("invalid account number or password")
 	}
 }
