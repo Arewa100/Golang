@@ -30,7 +30,6 @@ func (bank *Bank) countNumberOfAccounts() float64 {
 func (bank *Bank) Deposit(accountNumber string, amount float32) error {
 	accountToDeposit := bank.getAccount(accountNumber)
 	err := accountToDeposit.Deposit(accountNumber, amount)
-	fmt.Println(err)
 	if err != nil {
 		return err
 	}
@@ -40,14 +39,14 @@ func (bank *Bank) Deposit(accountNumber string, amount float32) error {
 func (bank *Bank) getAccount(accountNumber string) *Account {
 	theAccount := bank.listOfAccount[accountNumber]
 	return &theAccount
+
+	//I am here, i am having pointer issues
 }
 
 func (bank *Bank) CheckBalance(accountNumber string, password string) float32 {
 	theAccount := bank.getAccount(accountNumber)
-	fmt.Println(theAccount.CheckAccountBalance(accountNumber, "password"))
-	fmt.Println(bank.listOfAccount)
-	fmt.Println(theAccount)
 	balance := theAccount.CheckAccountBalance(accountNumber, password)
-	fmt.Println(balance)
+	fmt.Println(theAccount.CheckAccountBalance(accountNumber, password))
+	fmt.Printf("the balance is %f", balance)
 	return balance
 }

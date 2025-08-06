@@ -27,7 +27,7 @@ func TestToCreateAccount(t *testing.T) {
 
 func TestThatBankCanDeposit(t *testing.T) {
 	koloBank := bank()
-	koloBank.CreateAnAccount("Ola", "123456", "bajulaye number 1", "password")
+	theCreatedAccount := koloBank.CreateAnAccount("Ola", "123456", "bajulaye number 1", "password")
 	if koloBank == nil {
 		t.Error("error creating kolo bank")
 	}
@@ -35,10 +35,14 @@ func TestThatBankCanDeposit(t *testing.T) {
 		t.Error("Expected number of accounts to be 1")
 	}
 	err := koloBank.Deposit("123456", 2000)
+
 	if err != nil {
 		t.Error("error depositing to kolo bank")
 	}
+
 	if koloBank.CheckBalance("123456", "password") != 2000 {
 		t.Error("Expected balance to be 2000")
 	}
+
+	fmt.Println(theCreatedAccount.CheckAccountBalance("123456", "password"))
 }
