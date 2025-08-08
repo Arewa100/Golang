@@ -39,10 +39,39 @@ func TestThatBankCanDeposit(t *testing.T) {
 	if err != nil {
 		t.Error("error depositing to kolo bank")
 	}
-
+	fmt.Println(theCreatedAccount.CheckAccountBalance("123456", "password"))
 	if koloBank.CheckBalance("123456", "password") != 2000 {
 		t.Error("Expected balance to be 2000")
 	}
+}
 
-	fmt.Println(theCreatedAccount.CheckAccountBalance("123456", "password"))
+func TestThatBankCanWithDraw(t *testing.T) {
+	koloBank := bank()
+	koloBank.CreateAnAccount("Ola", "123456", "bajulaye number 1", "password")
+	koloBank.Deposit("123456", 2000)
+	if koloBank.CheckBalance("123456", "password") != 2000 {
+		t.Error("Expected balance to be 2000")
+	}
+	koloBank.WithDraw("123456", 1000, "password")
+	if koloBank.CheckBalance("123456", "password") != 1000 {
+		t.Error("Expected balance to be 2000")
+	}
+}
+
+func TestThatBankCanTransfer(test *testing.T) {
+	koloBank := bank()
+	koloBank.CreateAnAccount("Ola", "123456", "bajulaye number 1", "sender_password")
+	koloBank.CreateAnAccount("Ola", "144444", "bajulaye number 2", "password")
+	koloBank.Deposit("123456", 2000)
+	koloBank.Deposit("14444", 2000)
+	if koloBank.CheckBalance("144444", "password") != 2000 {
+		test.Errorf("Expected balance to be 2000")
+	}
+	koloBank.Transfer("123456", "144444", 1000, "sender_password")
+	if koloBank.CheckBalance("123456", "sender_password") != 1000 {
+		test.Errorf("Expected sender balance to be 2000")
+	}
+	if koloBank.CheckBalance("144444", "password") != 3000 {
+		test.Errorf("Expected receiver balance to be 3000")
+	}
 }
