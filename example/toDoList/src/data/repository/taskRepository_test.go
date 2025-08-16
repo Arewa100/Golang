@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"log"
 	"testing"
 	"time"
 	"toDoList/src/data/models"
@@ -154,11 +155,13 @@ func TestToAddTaskAndUpdateTheTaskContent(test *testing.T) {
 		}
 
 		updateError := newTaskRepo.UpdateTask("arewaking", "firstTask", "i want to start playing football")
+		updatedTask, err := newTaskRepo.GetTask("arewaking", "firstTask")
 		if updateError != nil {
 			test.Error("failed to update task")
+			log.Fatal(updateError)
 		}
-
-		if task != nil && task.GetTaskContent() != "i want to start playing football" {
+		if updatedTask != nil && updatedTask.GetTaskContent() != "i want to start playing football" {
+			fmt.Println(updatedTask.GetTaskContent())
 			test.Error("the task not updated successfully")
 		}
 

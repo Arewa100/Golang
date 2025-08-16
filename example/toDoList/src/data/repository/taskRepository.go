@@ -74,10 +74,15 @@ func checkIfRepoIsEmpty(taskRepo *TaskRepository) error {
 }
 
 func (taskRepo *TaskRepository) UpdateTask(userId string, title string, content string) error {
-	//find the task
-	for _, eachTask := range taskRepo.UserTaskRepository {
+	for key, eachTask := range taskRepo.UserTaskRepository {
 		if eachTask.UserId == userId && eachTask.Title == title {
-			eachTask.Title = content
+			newTask := new(models.Task)
+			newTask.UserId = eachTask.UserId
+			newTask.Title = eachTask.Title
+			newTask.TaskDate = eachTask.TaskDate
+			newTask.TaskContent = content
+			delete(taskRepo.UserTaskRepository, key)
+			taskRepo.UserTaskRepository[key] = *newTask
 			return nil
 		}
 	}
