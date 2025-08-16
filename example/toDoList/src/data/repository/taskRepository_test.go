@@ -108,16 +108,59 @@ func TestToAddMultipleTaskAndGetTaskByUserName(test *testing.T) {
 
 }
 
-func TestToAddTaskAndDeleteTask_RepoCountIsReduced(test *testing.T) {
+func TestToAddTaskAndDeleteTask_RepoCountIsReduced_From_Two_One(test *testing.T) {
 	newTaskRepo := CreateRepository()
 	firstTask := createTask()
 	secondTask := createSecondTask()
 
 	if newTaskRepo != nil {
+		firstError := newTaskRepo.AddTask(&firstTask)
+		secondError := newTaskRepo.AddTask(&secondTask)
 		if newTaskRepo.Count() != 2 {
 			test.Error("expected number of task to be 2")
 		}
+		if firstError != nil || secondError != nil {
+			test.Errorf("failed to add task %v %v", firstError, secondError)
+		}
 
-		newTaskRepo.DeleteTask("arewaking", "thirdTask")
+		err := newTaskRepo.DeleteTask("arewaking", "firstTask")
+		if err != nil {
+			test.Error("task not found")
+		}
+		if newTaskRepo.Count() != 1 {
+			test.Error("error deleting task")
+		}
+	}
+}
+
+func TestToAddTaskAndUpdateTheTaskContent(test *testing.T) {
+	newTaskRepo := CreateRepository()
+	firstTask := createTask()
+	secondTask := createSecondTask()
+	if newTaskRepo != nil {
+		newError := newTaskRepo.AddTask(&firstTask)
+		secondError := newTaskRepo.AddTask(&secondTask)
+		if newError != nil || secondError != nil {
+			test.Error("failed to add task")
+		}
+
+		task, err := newTaskRepo.GetTask("arewaking", "firstTask")
+		if err != nil {
+			test.Error("failed to get task")
+		}
+
+		if task != nil && task.GetTaskContent() != "i am working on my self" {
+			test.Error("task content is wrong")
+		}
+
+		updateError := newTaskRepo.UpdateTask("arewaking", "firstTask", "i want to start playing football")
+		if updateError != nil {
+			test.Error("failed to update task")
+		}
+
+		if task != nil && task.GetTaskContent() != "i want to start playing football" {
+			test.Error("the task not updated successfully")
+		}
+
 	}
 }
