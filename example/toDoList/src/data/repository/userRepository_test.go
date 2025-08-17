@@ -33,3 +33,57 @@ func TestThatUserRepository_Can_Add_User(test *testing.T) {
 		test.Error("user repo is not full")
 	}
 }
+
+func TestToAddUserAndDeleteTheUser(test *testing.T) {
+	newUserRepository := CreateUserRepository()
+	if newUserRepository == nil {
+		test.Error("repo not created successfully")
+	}
+	newUser := createUserOne()
+	if newUser == nil && newUserRepository != nil {
+		err := newUserRepository.AddUser(newUser)
+		if err != nil {
+			test.Error(err.Error())
+		}
+		if newUserRepository.Count() != 1 {
+			test.Error("user not added in repo successfully, expected 1")
+		}
+
+		deleteErr := newUserRepository.DeleteUser("arewaking")
+		if deleteErr != nil {
+			test.Error(deleteErr.Error())
+		}
+		if newUserRepository.Count() != 0 {
+			test.Error("user not deleted in repo successfully, expected 0")
+		}
+	}
+
+}
+
+func TestToAddUserAndFindUserByUserName(test *testing.T) {
+	newUserRepository := CreateUserRepository()
+	if newUserRepository == nil {
+		test.Error("repo not created successfully")
+	}
+	newUser := createUserOne()
+	if newUser == nil && newUserRepository != nil {
+		err := newUserRepository.AddUser(newUser)
+		if err != nil {
+			test.Error(err.Error())
+		}
+
+		if newUserRepository.Count() != 1 {
+			test.Error("user not added in repo successfully, expected 1")
+		}
+
+		//finding the user
+		foundedUser, err := newUserRepository.FindUserByUserName("arewaking")
+		if err != nil {
+			test.Error("user not found")
+		}
+		if foundedUser != nil && foundedUser.UserName != "arewaking" {
+			test.Error("founded user error")
+		}
+	}
+
+}
