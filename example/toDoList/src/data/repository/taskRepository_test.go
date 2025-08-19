@@ -167,3 +167,7 @@ func TestToAddTaskAndUpdateTheTaskContent(test *testing.T) {
 
 	}
 }
+
+func TestThatAllFieldMustBeFilled(test *testing.T) {
+	newTaskRepo := CreateRepository() //thi is where i am 
+}
