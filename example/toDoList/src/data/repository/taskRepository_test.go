@@ -169,5 +169,16 @@ func TestToAddTaskAndUpdateTheTaskContent(test *testing.T) {
 }
 
 func TestThatAllFieldMustBeFilled(test *testing.T) {
-	newTaskRepo := CreateRepository() //thi is where i am 
+	newTaskRepo := CreateRepository()
+	newTask := models.Task{
+		UserId:      "arewaking",
+		Title:       "",
+		TaskContent: "i am working on my self",
+		TaskDate:    time.Now(),
+	}
+
+	err := newTaskRepo.AddTask(&newTask)
+	if err != nil && err.Error() != "task title is empty" {
+		test.Error("expected title is required")
+	}
 }

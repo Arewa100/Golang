@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"strings"
 	"toDoList/src/data/models"
 )
 
@@ -16,6 +17,10 @@ func CreateRepository() *TaskRepository {
 }
 
 func (taskRepo *TaskRepository) AddTask(task *models.Task) error {
+	err := checkIfTaskFieldIsEmpty(task)
+	if err != nil {
+		return err
+	}
 	if &task != nil {
 		currentLength := len(taskRepo.UserTaskRepository)
 		taskRepo.UserTaskRepository[currentLength+1] = *task
@@ -87,4 +92,19 @@ func (taskRepo *TaskRepository) UpdateTask(userId string, title string, content 
 		}
 	}
 	return errors.New("task not found and not updated successfully")
+}
+func checkIfTaskFieldIsEmpty(task *models.Task) error {
+	if strings.TrimSpace(task.UserId) == "" {
+		return errors.New("user id is empty")
+	}
+	if strings.TrimSpace(task.Title) == "" {
+		return errors.New("task title is empty")
+	}
+	if strings.TrimSpace(task.TaskContent) == "" {
+		return errors.New("task content is empty")
+	}
+	if task.TaskDate.IsZero() {
+		return errors.New("task date is empty")
+	}
+	return nil
 }

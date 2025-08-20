@@ -16,9 +16,9 @@ func CreateTaskRepoService() *TaskRepoService {
 		theRepository: repository.CreateRepository(),
 	}
 }
-func (theRepository *TaskRepoService) CreateTask(request request.CreateTaskRequest) response.CreateTaskResponse {
+func (taskService *TaskRepoService) CreateTask(request request.CreateTaskRequest) response.CreateTaskResponse {
 	newTask := utils.CreateTaskMapper(request)
-	err := theRepository.theRepository.AddTask(&newTask)
+	err := taskService.theRepository.AddTask(&newTask)
 	if err != nil {
 		newResponse := new(response.CreateTaskResponse)
 		newResponse.Message = err.Error()
@@ -28,4 +28,21 @@ func (theRepository *TaskRepoService) CreateTask(request request.CreateTaskReque
 	newResponse.Message = "task created successfully"
 	return *newResponse
 
+}
+
+func (taskService *TaskRepoService) ViewTaskContent(request request.ViewTaskContentRequest) response.ViewTaskContentResponse {
+	foundedTask, err := taskService.theRepository.GetTask(request.UserId, request.Title)
+	if err != nil {
+		newResponse := new(response.ViewTaskContentResponse)
+		newResponse.Content = err.Error()
+		return *newResponse
+	}
+	if foundedTask == nil {
+		newResponse := new(response.ViewTaskContentResponse)
+		newResponse.Content = "task not found"
+		return *newResponse
+	}
+	newResponse := new(response.ViewTaskContentResponse)
+	newResponse.Content = foundedTask.TaskContent
+	return *newResponse
 }

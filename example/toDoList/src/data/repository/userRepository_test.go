@@ -87,3 +87,15 @@ func TestToAddUserAndFindUserByUserName(test *testing.T) {
 	}
 
 }
+
+func TestThatAllFieldOfUserMustBeFilled(test *testing.T) {
+	newUserRepository := CreateUserRepository()
+	newUser := models.User{
+		UserName: "Miracle",
+		Password: "",
+	}
+	err := newUserRepository.AddUser(&newUser)
+	if err != nil && err.Error() != "password is empty" {
+		test.Error("expected password is empty")
+	}
+}
