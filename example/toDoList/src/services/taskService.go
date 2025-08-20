@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"toDoList/src/data/repository"
 	"toDoList/src/dtos/request"
 	"toDoList/src/dtos/response"
@@ -44,5 +45,7 @@ func (taskService *TaskRepoService) ViewTaskContent(request request.ViewTaskCont
 	}
 	newResponse := new(response.ViewTaskContentResponse)
 	newResponse.Content = foundedTask.TaskContent
+	fmt.Println(foundedTask.TaskDate)
+	newResponse.TaskDate = foundedTask.TaskDate.String()
 	return *newResponse
 }

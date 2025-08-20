@@ -26,12 +26,14 @@ func TestThatToViewTaskContent(test *testing.T) {
 	newTaskRequest.UserId = "Miracle"
 	newTaskRequest.Title = "Prayer Request"
 	newTaskRequest.TaskContent = "God is great"
+	newTaskRequest.TaskDate = "12/08/2025"
 	message := newTaskRepoService.CreateTask(*newTaskRequest)
 	if message.Message != "task created successfully" {
 		test.Error("task creation error")
 	}
 	var content response.ViewTaskContentResponse = newTaskRepoService.ViewTaskContent(request.ViewTaskContentRequest{UserId: "Miracle", Title: "Prayer Request"})
 	fmt.Println(content.Content)
+	fmt.Println(content.TaskDate)
 	if content.Content != "God is great" {
 		test.Error("expected content thank you father, got " + content.Content)
 	}

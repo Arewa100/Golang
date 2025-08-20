@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 	"toDoList/src/data/models"
@@ -9,12 +10,14 @@ import (
 
 func CreateTaskMapper(request request.CreateTaskRequest) models.Task {
 	theYear, theMonth, theDay := getDate(request)
+	fmt.Println(theYear, theMonth, theDay)
 	newTask := models.Task{
 		UserId:      request.UserId,
 		Title:       request.Title,
 		TaskContent: request.TaskContent,
-		TaskDate:    time.Date(theYear, theMonth, theDay, 0, 0, 0, 0, time.UTC),
+		TaskDate:    time.Date(theYear, theMonth, theDay, 0, 0, 0, 0, time.Local),
 	}
+	fmt.Println(newTask.TaskDate.Year())
 	return newTask
 }
 
