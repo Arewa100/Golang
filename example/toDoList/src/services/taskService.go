@@ -49,3 +49,14 @@ func (taskService *TaskRepoService) ViewTaskContent(request request.ViewTaskCont
 	newResponse.TaskDate = foundedTask.TaskDate.String()
 	return *newResponse
 }
+
+func (taskService *TaskRepoService) DeleteTask(request request.DeleteTaskRequest) response.DeleteTaskResponse {
+	err := taskService.theRepository.DeleteTask(request.UserId, request.Title)
+	if err != nil {
+		message := response.DeleteTaskResponse{Message: err.Error()}
+		return message
+	}
+	message := new(response.DeleteTaskResponse)
+	message.Message = "task deleted successfully"
+	return *message
+}
