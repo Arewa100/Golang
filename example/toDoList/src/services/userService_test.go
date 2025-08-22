@@ -29,8 +29,10 @@ func TestForUserToAddTaskWhenLoggedOut(test *testing.T) {
 	if newUserService.userServiceRepository == nil {
 		test.Errorf("user service repository is nil")
 	}
-
-	//write the logic for this here
-	//this is where i am
+	message := newUserService.AddTask(request.CreateTaskRequest{UserId: "arewaking", Title: "reminder", TaskContent: "we are going to martket", TaskDate: "23/08/2025"})
+	if message.Message == 
+	if message.Message != "user not logged in" {
+		test.Error("expected user not logged in")
+	}
 
 }

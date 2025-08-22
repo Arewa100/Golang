@@ -3,7 +3,7 @@ package models
 type User struct {
 	UserName   string
 	Password   string
-	isLoggedIn bool
+	IsLoggedIn bool
 }
 
 func (user *User) GetUsrName() string {

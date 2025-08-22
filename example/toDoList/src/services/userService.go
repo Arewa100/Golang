@@ -9,11 +9,13 @@ import (
 
 type UserService struct {
 	userServiceRepository *repository.UserRepository
+	TaskRepoService       *TaskRepoService
 }
 
 func CreateUserService() *UserService {
 	return &UserService{
 		userServiceRepository: repository.CreateUserRepository(),
+		TaskRepoService:       CreateTaskRepoService(),
 	}
 }
 func (userService *UserService) register(request request.RegisterUserRequest) response.RegisterUserResponse {
@@ -26,4 +28,20 @@ func (userService *UserService) register(request request.RegisterUserRequest) re
 		return response.RegisterUserResponse{Message: err.Error()}
 	}
 	return response.RegisterUserResponse{Message: "user registered successfully"}
+}
+
+func (userService *UserService) AddTask(request request.CreateTaskRequest) response.CreateTaskResponse {
+	theUser, err := userService.userServiceRepository.FindUserByUserName(request.UserId)
+	if err != nil {
+		return response.CreateTaskResponse{Message: err.Error()}
+	}
+	if theUser == nil {
+		return response.CreateTaskResponse{Message: "user not found"}
+	}
+	if theUser.IsLoggedIn == false {
+		return response.CreateTaskResponse{Message: "user is not logged in"}
+	} else {
+		createTaskResponse := userService.TaskRepoService.CreateTask(request)
+		return response.CreateTaskResponse{Message: createTaskResponse.Message}
+	}
 }
