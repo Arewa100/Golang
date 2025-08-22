@@ -60,3 +60,18 @@ func (userService *UserService) LoginUser(request request.LoginUserRequest) resp
 	}
 	return response.LoginUserResponse{Message: "user already logged in"}
 }
+
+func (userService *UserService) LogoutUser(request request.LogoutUserRequest) response.LogoutUserResponse {
+	theUser, err := userService.userServiceRepository.FindUserByUserName(request.UserName)
+	if err != nil {
+		return response.LogoutUserResponse{Message: err.Error()}
+	}
+	if theUser == nil {
+		return response.LogoutUserResponse{Message: "user not found"}
+	}
+	if theUser.IsLoggedIn == true {
+		theUser.IsLoggedIn = false
+		return response.LogoutUserResponse{Message: "user logged out successfully"}
+	}
+	return response.LogoutUserResponse{Message: "logout error: check username"}
+}
