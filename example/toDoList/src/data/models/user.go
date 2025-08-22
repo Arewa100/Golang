@@ -1,8 +1,9 @@
 package models
 
 type User struct {
-	UserName string
-	Password string
+	UserName   string
+	Password   string
+	isLoggedIn bool
 }
 
 func (user *User) GetUsrName() string {
