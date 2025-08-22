@@ -45,3 +45,18 @@ func (userService *UserService) AddTask(request request.CreateTaskRequest) respo
 		return response.CreateTaskResponse{Message: createTaskResponse.Message}
 	}
 }
+
+func (userService *UserService) LoginUser(request request.LoginUserRequest) response.LoginUserResponse {
+	theUser, err := userService.userServiceRepository.FindUserByUserName(request.Username)
+	if err != nil {
+		return response.LoginUserResponse{Message: err.Error()}
+	}
+	if theUser == nil {
+		return response.LoginUserResponse{Message: "user not found"}
+	}
+	if theUser.IsLoggedIn == false {
+		theUser.IsLoggedIn = true
+		return response.LoginUserResponse{Message: "user logged in successfully"}
+	}
+	return response.LoginUserResponse{Message: "user already logged in"}
+}
