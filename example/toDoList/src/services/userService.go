@@ -75,3 +75,25 @@ func (userService *UserService) LogoutUser(request request.LogoutUserRequest) re
 	}
 	return response.LogoutUserResponse{Message: "logout error: check username"}
 }
+
+func (userService *UserService) ViewTask(request request.ViewTaskContentRequest) response.ViewTaskResponse {
+	foundedUser, err := userService.userServiceRepository.FindUserByUserName(request.UserId)
+	if foundedUser != nil && checkIfUserIsLoggedIn(*foundedUser) == false {
+		return response.ViewTaskResponse{Content: "user is not logged in"}
+	}
+	if err != nil {
+		return response.ViewTaskResponse{Content: err.Error()}
+	}
+	if foundedUser == nil {
+		return response.ViewTaskResponse{Content: "user not found"}
+	}
+	foundedTaskResponse := userService.TaskRepoService.ViewTaskContent(request)
+	return response.ViewTaskResponse{Content: foundedTaskResponse.Content, TaskDate: foundedTaskResponse.TaskDate}
+}
+
+func checkIfUserIsLoggedIn(user models.User) bool {
+	if user.IsLoggedIn == false {
+		return false
+	}
+	return true
+}

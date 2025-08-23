@@ -90,3 +90,37 @@ func TestToLoginAndLogoutAUser(test *testing.T) {
 	}
 
 }
+
+func TestToViewTaskByUser(test *testing.T) {
+	newUserService := CreateUserService()
+	newUserService.register(request.RegisterUserRequest{Username: "arewaking", Password: "123456"})
+	newUserService.LoginUser(request.LoginUserRequest{Username: "arewaking", Password: "123456"})
+	newUserService.AddTask(request.CreateTaskRequest{UserId: "arewaking", Title: "reminder", TaskContent: "we are going to market", TaskDate: "23/08/2025"})
+	viewTaskResponse := newUserService.ViewTask(request.ViewTaskContentRequest{UserId: "arewaking", Title: "reminder"})
+	if viewTaskResponse.Content != "we are going to market" {
+		test.Error("expected we are going to market")
+	}
+
+}
+
+func TestToViewContentWhenUserIsNotLoggedIn(test *testing.T) {
+	newUserService := CreateUserService()
+	newUserService.register(request.RegisterUserRequest{Username: "arewaking", Password: "123456"})
+	newUserService.AddTask(request.CreateTaskRequest{UserId: "arewaking", Title: "reminder", TaskContent: "we are going to market", TaskDate: "23/08/2025"})
+	viewTaskResponse := newUserService.ViewTask(request.ViewTaskContentRequest{UserId: "arewaking", Title: "reminder"})
+	if viewTaskResponse.Content != "user is not logged in" {
+		test.Errorf("expected \"user is not logged in\", but got %s", viewTaskResponse.Content)
+
+	}
+}
+
+func TestThatUserCanDeleteTask(test *testing.T) {
+	newUserService := CreateUserService()
+	newUserService.register(request.RegisterUserRequest{Username: "arewaking", Password: "123456"})
+	newUserService.AddTask(request.CreateTaskRequest{UserId: "arewaking", Title: "reminder", TaskContent: "we are going to market", TaskDate: "23/08/2025"})
+	viewTaskResponse := newUserService.ViewTask(request.ViewTaskContentRequest{UserId: "arewaking", Title: "reminder"})
+	if viewTaskResponse.Content != "user is not logged in" {
+		test.Errorf("expected \"user is not logged in\", but got %s", viewTaskResponse.Content)
+
+	}
+}
