@@ -63,3 +63,30 @@ func TestToCreateTaskAndDeleteTask(test *testing.T) {
 	}
 
 }
+
+func TestToUpdateTheTaskContent(test *testing.T) {
+	newTaskRepoService := CreateTaskRepoService()
+	newTaskRequest := new(request.CreateTaskRequest)
+	newTaskRequest.UserId = "Miracle"
+	newTaskRequest.Title = "Prayer Request"
+	newTaskRequest.TaskContent = "God is great"
+	newTaskRequest.TaskDate = "10/12/2024"
+	message := newTaskRepoService.CreateTask(*newTaskRequest)
+	if message.Message != "task created successfully" {
+		test.Error("task creation error")
+	}
+
+	content := newTaskRepoService.ViewTaskContent(request.ViewTaskContentRequest{UserId: "Miracle", Title: "Prayer Request"})
+	if content.Content != "God is great" {
+		test.Error("expected content thank you father, got " + content.Content)
+	}
+	updateResponse := newTaskRepoService.UpdateTaskContent(request.UpdateTaskContentRequest{UserId: "Miracle", Title: "Prayer Request", NewContent: "thank you father"})
+	if updateResponse.Message != "task updated successfully" {
+		test.Error("expected: task response to be task updated successfully")
+	}
+
+	newContent := newTaskRepoService.ViewTaskContent(request.ViewTaskContentRequest{UserId: "Miracle", Title: "Prayer Request"})
+	if newContent.Content != "thank you father" {
+		test.Error("expected content thank you father, got " + newContent.Content)
+	}
+}

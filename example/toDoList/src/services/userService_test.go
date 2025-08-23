@@ -117,10 +117,37 @@ func TestToViewContentWhenUserIsNotLoggedIn(test *testing.T) {
 func TestThatUserCanDeleteTask(test *testing.T) {
 	newUserService := CreateUserService()
 	newUserService.register(request.RegisterUserRequest{Username: "arewaking", Password: "123456"})
+	newUserService.LoginUser(request.LoginUserRequest{Username: "arewaking", Password: "123456"})
 	newUserService.AddTask(request.CreateTaskRequest{UserId: "arewaking", Title: "reminder", TaskContent: "we are going to market", TaskDate: "23/08/2025"})
 	viewTaskResponse := newUserService.ViewTask(request.ViewTaskContentRequest{UserId: "arewaking", Title: "reminder"})
-	if viewTaskResponse.Content != "user is not logged in" {
-		test.Errorf("expected \"user is not logged in\", but got %s", viewTaskResponse.Content)
+	if viewTaskResponse.Content != "we are going to market" {
+		test.Error("expected we are going to market")
+	}
+	deleteTaskResponse := newUserService.DeleteTask(request.DeleteTaskRequest{UserId: "arewaking", Title: "reminder"})
+	if deleteTaskResponse.Message != "task deleted successfully" {
+		test.Error("expected task deleted successfully")
+	}
+	newViewTaskResponse := newUserService.ViewTask(request.ViewTaskContentRequest{UserId: "arewaking", Title: "reminder"})
+	if newViewTaskResponse.Content != "task not found" {
+		test.Error("expected task not found")
+	}
+}
 
+func TestToUpdateTaskContent(test *testing.T) {
+	newUserService := CreateUserService()
+	newUserService.register(request.RegisterUserRequest{Username: "arewaking", Password: "123456"})
+	newUserService.LoginUser(request.LoginUserRequest{Username: "arewaking", Password: "123456"})
+	newUserService.AddTask(request.CreateTaskRequest{UserId: "arewaking", Title: "reminder", TaskContent: "we are going to market", TaskDate: "23/08/2025"})
+	viewTaskResponse := newUserService.ViewTask(request.ViewTaskContentRequest{UserId: "arewaking", Title: "reminder"})
+	if viewTaskResponse.Content != "we are going to market" {
+		test.Error("expected we are going to market")
+	}
+	updateResponse := newUserService.UpdateTask(request.UpdateTaskContentRequest{UserId: "arewaking", Title: "reminder", NewContent: "back home"})
+	if updateResponse.Message != "task updated successfully" {
+		test.Error("expected task updated successfully")
+	}
+	viewTaskNewContent := newUserService.ViewTask(request.ViewTaskContentRequest{UserId: "arewaking", Title: "reminder"})
+	if viewTaskNewContent.Content != "back home" {
+		test.Error("expected back home")
 	}
 }

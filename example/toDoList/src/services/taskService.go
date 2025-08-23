@@ -60,3 +60,11 @@ func (taskService *TaskRepoService) DeleteTask(request request.DeleteTaskRequest
 	message.Message = "task deleted successfully"
 	return *message
 }
+
+func (taskService *TaskRepoService) UpdateTaskContent(contentRequest request.UpdateTaskContentRequest) response.UpdateTaskContentResponse {
+	err := taskService.theRepository.UpdateTask(contentRequest.UserId, contentRequest.Title, contentRequest.NewContent)
+	if err != nil {
+		return response.UpdateTaskContentResponse{Message: "task update failed"}
+	}
+	return response.UpdateTaskContentResponse{Message: "task updated successfully"}
+}

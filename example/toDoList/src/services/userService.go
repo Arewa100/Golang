@@ -97,3 +97,27 @@ func checkIfUserIsLoggedIn(user models.User) bool {
 	}
 	return true
 }
+
+func (userService *UserService) DeleteTask(request request.DeleteTaskRequest) response.DeleteTaskResponse {
+	foundedUser, err := userService.userServiceRepository.FindUserByUserName(request.UserId)
+	if foundedUser != nil && checkIfUserIsLoggedIn(*foundedUser) == false {
+		return response.DeleteTaskResponse{Message: "user is not logged in"}
+	}
+	if err != nil {
+		return response.DeleteTaskResponse{Message: err.Error()}
+	}
+	deleteTaskResponse := userService.TaskRepoService.DeleteTask(request)
+	return response.DeleteTaskResponse{Message: deleteTaskResponse.Message}
+}
+
+func (userService *UserService) UpdateTask(request request.UpdateTaskContentRequest) response.UpdateTaskContentResponse {
+	foundedUser, err := userService.userServiceRepository.FindUserByUserName(request.UserId)
+	if foundedUser != nil && checkIfUserIsLoggedIn(*foundedUser) == false {
+		return response.UpdateTaskContentResponse{Message: "user is not logged in"}
+	}
+	if err != nil {
+		return response.UpdateTaskContentResponse{Message: err.Error()}
+	}
+	updateResponse := userService.TaskRepoService.UpdateTaskContent(request)
+	return response.UpdateTaskContentResponse{Message: updateResponse.Message}
+}
