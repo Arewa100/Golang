@@ -2,73 +2,52 @@ package main
 
 import (
 	"encoding/json"
-	//"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"time"
+	//"toDoList/src/services/"
 )
 
-type Message struct {
-	Content string `json:"content"`
-	Id      int    `json:"id"`
-}
-
 func main() {
-
-	//newMessage := Message{Content: "Hello World!", Id: 23}
-	//
-	//byteArray, err := json.Marshal(newMessage)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-
-	mux := http.NewServeMux()
 	PORT := ":8080"
+	mux := http.NewServeMux()
+	mux.HandleFunc("/register", http.HandlerFunc(RegisterUser))
 
-	mux.Handle("/", http.HandlerFunc(getMessage))
-
-	server := &http.Server{
+	server := http.Server{
 		Addr:         PORT,
 		Handler:      mux,
 		IdleTimeout:  time.Minute,
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
+		ReadTimeout:  time.Minute,
+		WriteTimeout: time.Minute,
 	}
 
-	serverError := server.ListenAndServe()
-	if serverError != nil {
-		log.Fatal(server)
+	severError := server.ListenAndServe()
+	if severError != nil {
+		log.Fatal("this is the server error: ", severError)
 	}
-
 }
 
-func getMessage(response http.ResponseWriter, request *http.Request) {
-	log.Println("the request is", request.URL.Path, "from", request.Host)
-	response.WriteHeader(http.StatusOK)
-	body := Message{Content: "Hello World", Id: 20}
-	jsonString, err := json.Marshal(body)
+func RegisterUser(response http.ResponseWriter, request *http.Request) {
+	fmt.Println("SERVING", request.URL.Path, "from", request.Host)
+	if request.Method != "POST" { //check request method
+		http.Error(response, "method not allowed", http.StatusMethodNotAllowed)
+		response.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+	userIncomingData, err := io.ReadAll(request.Body)
 	if err != nil {
-		response.WriteHeader(http.StatusInternalServerError)
+		http.Error(response, "bad request", http.StatusBadRequest)
+		response.WriteHeader(http.StatusBadRequest)
+		return
 	}
-	fmt.Fprintf(response, "%s", jsonString)
+	var userData []struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+
+	err = json.Unmarshal(userIncomingData, &userData)
+	fmt.Println(userIncomingData)
 
 }
-
-//func defaultHandler(response http.ResponseWriter, request *http.Request) {
-//	log.Println("default", request.URL.Path, "from", request.Host)
-//	response.WriteHeader(http.StatusNotFound)
-//	body := "thank you: try again later"
-//	fmt.Fprintf(response, "%s", body)
-//
-//}
-//
-//func deleteHandler(response http.ResponseWriter, request *http.Request) {
-//	parameter := strings.Split(request.URL.Path, "/")
-//	fmt.Println(parameter)
-//	response.WriteHeader(http.StatusOK)
-//	if len(parameter) < 4 {
-//		response.WriteHeader(http.StatusBadRequest)
-//
-//	}
-//}
